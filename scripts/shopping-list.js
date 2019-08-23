@@ -1,9 +1,7 @@
 'use strict';
 /* global store, api */
 
-// eslint-disable-next-line no-unused-vars
 const shoppingList = (function(){
-
   function generateItemElement(item) {
     const checkedClass = item.checked ? 'shopping-item__checked' : '';
     const editBtnStatus = item.checked ? 'disabled' : '';
@@ -34,12 +32,10 @@ const shoppingList = (function(){
       </li>`;
   }
   
-  
   function generateShoppingItemsString(shoppingList) {
     const items = shoppingList.map((item) => generateItemElement(item));
     return items.join('');
   }
-  
   
   function render() {
     // Filter item list if store prop is true by item.checked === false
@@ -60,8 +56,7 @@ const shoppingList = (function(){
     // insert that HTML into the DOM
     $('.js-shopping-list').html(shoppingListItemsString);
   }
-  
-  
+   
   function handleNewItemSubmit() {
     $('#js-shopping-list-form').submit(function (event) {
       event.preventDefault();
@@ -160,7 +155,6 @@ const shoppingList = (function(){
     handleItemStartEditing();
   }
 
-  // This object contains the only exposed methods from this module:
   return {
     render,
     bindEventListeners,

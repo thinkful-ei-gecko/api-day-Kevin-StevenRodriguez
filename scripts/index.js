@@ -1,6 +1,6 @@
 'use strict';
-/* global shoppingList, store, Item, api */
-// eslint-disable-next-line no-unused-vars
+/* global shoppingList, store, api */
+
 $(document).ready(function() {
   shoppingList.bindEventListeners();
   api.getItems() // fetch all items
