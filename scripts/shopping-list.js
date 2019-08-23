@@ -40,6 +40,9 @@ const shoppingList = (function(){
   function render() {
     // Filter item list if store prop is true by item.checked === false
     let items = [ ...store.items ];
+    if (store.error !==null){
+      // use value from store.error to populate DOM
+    }
     if (store.hideCheckedItems) {
       items = items.filter(item => !item.checked);
     }
@@ -63,11 +66,15 @@ const shoppingList = (function(){
       const newItemName = $('.js-shopping-list-entry').val();
       $('.js-shopping-list-entry').val('');
       api.createItem(newItemName)
-        .then(response => response.json())
+        // .then(response => api.handleError(response))
         .then(newItem => {
           store.addItem(newItem);
           render();
-        });
+        })
+        .catch(err => {
+          console.log(err)
+          store.handleError(err.message)
+        })
     });
   }
   
@@ -90,6 +97,10 @@ const shoppingList = (function(){
               store.findAndUpdate(id, { checked: !serverItemCheckedProperty });
               render();
             });
+        })
+        .catch(err => {
+          console.log(err);
+          store.handleError(err.message)
         });
     });
   }
@@ -103,6 +114,10 @@ const shoppingList = (function(){
         .then(() => {
           store.findAndDelete(id);
           render();
+        })
+        .catch(err => {
+          console.log(err);
+          store.handleError(err.message)
         });
     });
   }
@@ -118,6 +133,10 @@ const shoppingList = (function(){
           store.findAndUpdate(id, { name: itemName }); // front-end
           store.setItemIsEditing(id, false);
           render();
+        })
+        .catch(err => {
+          console.log(err);
+          store.handleError(err.message)
         });
     });
   }
