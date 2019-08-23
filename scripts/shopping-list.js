@@ -1,5 +1,5 @@
 'use strict';
-/* global store, $ */
+/* global store, api */
 
 // eslint-disable-next-line no-unused-vars
 const shoppingList = (function(){
@@ -67,8 +67,14 @@ const shoppingList = (function(){
       event.preventDefault();
       const newItemName = $('.js-shopping-list-entry').val();
       $('.js-shopping-list-entry').val('');
-      store.addItem(newItemName);
-      render();
+      // store.addItem(newItemName);
+      // render();
+      api.createItem(newItemName)
+        .then(response => response.json())
+        .then(newItem => {
+          store.addItem(newItem);
+          render();
+        });
     });
   }
   
@@ -144,7 +150,7 @@ const shoppingList = (function(){
 
   // This object contains the only exposed methods from this module:
   return {
-    render: render,
-    bindEventListeners: bindEventListeners,
+    render,
+    bindEventListeners,
   };
 }());
