@@ -87,6 +87,11 @@ const shoppingList = (function(){
   function handleItemCheckClicked() {
     $('.js-shopping-list').on('click', '.js-item-toggle', event => {
       const id = getItemIdFromElement(event.currentTarget);
+      api.updateItem(id, { checked: 
+        api.getItemById(id)
+          .then(response => response.json())
+          //.then(jsonData => )
+      });
       store.findAndToggleChecked(id);
       render();
     });
@@ -109,7 +114,8 @@ const shoppingList = (function(){
       event.preventDefault();
       const id = getItemIdFromElement(event.currentTarget);
       const itemName = $(event.currentTarget).find('.shopping-item').val();
-      store.findAndUpdateName(id, itemName);
+      api.updateItem(id, { name: itemName }); // back-end
+      store.findAndUpdate(id, { name: itemName }); // front-end
       store.setItemIsEditing(id, false);
       render();
     });
