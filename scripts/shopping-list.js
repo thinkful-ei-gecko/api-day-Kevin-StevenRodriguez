@@ -87,25 +87,32 @@ const shoppingList = (function(){
   function handleItemCheckClicked() {
     $('.js-shopping-list').on('click', '.js-item-toggle', event => {
       const id = getItemIdFromElement(event.currentTarget);
-      api.updateItem(id, { checked: 
-        api.getItemById(id)
-          .then(response => response.json())
-          //.then(jsonData => )
-      });
-      store.findAndToggleChecked(id);
-      render();
+      
+      let serverItemCheckedProperty;
+      api.getItemById(id)
+        .then(response => response.json())
+        .then(jsonData => serverItemCheckedProperty = jsonData.checked )
+        .then(() => {
+          api.updateItem(id, { checked: !serverItemCheckedProperty })
+            .then(() => {
+              store.findAndUpdate(id, { checked: !serverItemCheckedProperty });
+              render();
+            });
+        });
     });
   }
   
   function handleDeleteItemClicked() {
-    // like in `handleItemCheckClicked`, we use event delegation
     $('.js-shopping-list').on('click', '.js-item-delete', event => {
-      // get the index of the item in store.items
       const id = getItemIdFromElement(event.currentTarget);
-      // delete the item
-      store.findAndDelete(id);
-      // render the updated shopping list
-      render();
+
+      api.deleteItem(id)
+        .then(response => response.json())
+        // .then(jsonData => console.log(jsonData))
+        .then(() => {
+          store.findAndDelete(id);
+          render();
+        });
     });
   }
   
@@ -114,10 +121,13 @@ const shoppingList = (function(){
       event.preventDefault();
       const id = getItemIdFromElement(event.currentTarget);
       const itemName = $(event.currentTarget).find('.shopping-item').val();
-      api.updateItem(id, { name: itemName }); // back-end
-      store.findAndUpdate(id, { name: itemName }); // front-end
-      store.setItemIsEditing(id, false);
-      render();
+      api.updateItem(id, { name: itemName }) // back-end
+        .then(response => response.json())
+        .then(() => {
+          store.findAndUpdate(id, { name: itemName }); // front-end
+          store.setItemIsEditing(id, false);
+          render();
+        });
     });
   }
   

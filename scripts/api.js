@@ -13,7 +13,7 @@ const api = (function() {
   }
 
   function createItem(name) {
-    const newItem = JSON.stringify({ name });
+    const newItem = JSON.stringify({ id: cuid(), name, checked: false });
     return fetch(`${BASE_URL}/items`, {
       method: 'POST',
       headers: {
@@ -34,10 +34,17 @@ const api = (function() {
     });
   }
 
+  function deleteItem(id) {
+    return fetch(`${BASE_URL}/items/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
   return {
     getItems,
     getItemById,
     createItem,
-    updateItem
+    updateItem,
+    deleteItem
   };
 }());
