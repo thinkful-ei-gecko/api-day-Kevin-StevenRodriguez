@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 'use strict';
 
 const store = (function(){
@@ -31,13 +32,12 @@ const store = (function(){
     this.searchTerm = term;
   };
 
-  function handleError(error) {
-    this.error=error; 
+  const displayError = function(error) {
+    alert(`${error.status} ${error.statusText}: ${error.message}`);
   };
 
   return {
     items: [],
-    error: null,
     hideCheckedItems: false,
     searchTerm: '',
     addItem,
@@ -47,6 +47,6 @@ const store = (function(){
     toggleCheckedFilter,
     setSearchTerm,
     setItemIsEditing,
-    handleError
+    displayError
   };
 }());

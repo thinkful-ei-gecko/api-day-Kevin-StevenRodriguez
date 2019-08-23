@@ -1,5 +1,6 @@
-'use strict';
+/* eslint-disable no-unused-vars */
 /* global store, api */
+'use strict';
 
 const shoppingList = (function(){
   function generateItemElement(item) {
@@ -40,9 +41,7 @@ const shoppingList = (function(){
   function render() {
     // Filter item list if store prop is true by item.checked === false
     let items = [ ...store.items ];
-    if (store.error !==null){
-      // use value from store.error to populate DOM
-    }
+
     if (store.hideCheckedItems) {
       items = items.filter(item => !item.checked);
     }
@@ -66,15 +65,11 @@ const shoppingList = (function(){
       const newItemName = $('.js-shopping-list-entry').val();
       $('.js-shopping-list-entry').val('');
       api.createItem(newItemName)
-        // .then(response => api.handleError(response))
         .then(newItem => {
           store.addItem(newItem);
           render();
         })
-        .catch(err => {
-          console.log(err)
-          store.handleError(err.message)
-        })
+        .catch(err => store.displayError(err));
     });
   }
   
@@ -87,21 +82,15 @@ const shoppingList = (function(){
   function handleItemCheckClicked() {
     $('.js-shopping-list').on('click', '.js-item-toggle', event => {
       const id = getItemIdFromElement(event.currentTarget);    
-      let serverItemCheckedProperty;
       api.getItemById(id)
-        .then(response => response.json())
-        .then(jsonData => serverItemCheckedProperty = jsonData.checked )
         .then(() => {
-          api.updateItem(id, { checked: !serverItemCheckedProperty })
+          api.updateItem(id, { checked: !store.findById(id).checked })
             .then(() => {
-              store.findAndUpdate(id, { checked: !serverItemCheckedProperty });
+              store.findAndUpdate(id, { checked: !store.findById(id).checked });
               render();
             });
         })
-        .catch(err => {
-          console.log(err);
-          store.handleError(err.message)
-        });
+        .catch(err => store.displayError(err));
     });
   }
   
@@ -109,16 +98,11 @@ const shoppingList = (function(){
     $('.js-shopping-list').on('click', '.js-item-delete', event => {
       const id = getItemIdFromElement(event.currentTarget);
       api.deleteItem(id)
-        .then(response => response.json())
-        // .then(jsonData => console.log(jsonData))
         .then(() => {
           store.findAndDelete(id);
           render();
         })
-        .catch(err => {
-          console.log(err);
-          store.handleError(err.message)
-        });
+        .catch(err => store.displayError(err));
     });
   }
   
@@ -127,17 +111,13 @@ const shoppingList = (function(){
       event.preventDefault();
       const id = getItemIdFromElement(event.currentTarget);
       const itemName = $(event.currentTarget).find('.shopping-item').val();
-      api.updateItem(id, { name: itemName }) // back-end
-        .then(response => response.json())
+      api.updateItem(id, { name: itemName })
         .then(() => {
-          store.findAndUpdate(id, { name: itemName }); // front-end
+          store.findAndUpdate(id, { name: itemName });
           store.setItemIsEditing(id, false);
           render();
         })
-        .catch(err => {
-          console.log(err);
-          store.handleError(err.message)
-        });
+        .catch(err => store.displayError(err));
     });
   }
   
