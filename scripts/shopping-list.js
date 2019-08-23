@@ -67,8 +67,6 @@ const shoppingList = (function(){
       event.preventDefault();
       const newItemName = $('.js-shopping-list-entry').val();
       $('.js-shopping-list-entry').val('');
-      // store.addItem(newItemName);
-      // render();
       api.createItem(newItemName)
         .then(response => response.json())
         .then(newItem => {
@@ -86,8 +84,7 @@ const shoppingList = (function(){
   
   function handleItemCheckClicked() {
     $('.js-shopping-list').on('click', '.js-item-toggle', event => {
-      const id = getItemIdFromElement(event.currentTarget);
-      
+      const id = getItemIdFromElement(event.currentTarget);    
       let serverItemCheckedProperty;
       api.getItemById(id)
         .then(response => response.json())
@@ -105,7 +102,6 @@ const shoppingList = (function(){
   function handleDeleteItemClicked() {
     $('.js-shopping-list').on('click', '.js-item-delete', event => {
       const id = getItemIdFromElement(event.currentTarget);
-
       api.deleteItem(id)
         .then(response => response.json())
         // .then(jsonData => console.log(jsonData))
