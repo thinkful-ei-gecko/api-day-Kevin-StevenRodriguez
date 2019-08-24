@@ -32,11 +32,12 @@ const store = (function(){
     this.searchTerm = term;
   };
 
-  const displayError = function(error) {
-    alert(`${error.status} ${error.statusText}: ${error.message}`);
+  const setError = function(error) {
+    this.error = error;
   };
 
   return {
+    error: null,
     items: [],
     hideCheckedItems: false,
     searchTerm: '',
@@ -47,6 +48,6 @@ const store = (function(){
     toggleCheckedFilter,
     setSearchTerm,
     setItemIsEditing,
-    displayError
+    setError
   };
 }());

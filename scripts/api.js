@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/* global cuid */
+/* global cuid, store */
 'use strict';
 
 const api = (function() {
@@ -10,23 +10,22 @@ const api = (function() {
     return fetch(...args)
       .then(response => {
         if (!response.ok) {
-          // Valid HTTP response but non-2xx status - let's create an error!
-          error = { status: response.status, statusText: response.statusText };
+          error = { code: response.status };
+          if (!response.headers.get('content-type').includes('json')) {
+            error.message = response.statusText;
+            return Promise.reject(error);
+          }
         }
-
-        // In either case, parse the JSON stream:
         return response.json();
       })
       .then(data => {
-        // If error was flagged, reject the Promise with the error object
         if (error) {
           error.message = data.message;
           return Promise.reject(error);
-        }
-  
-        // Otherwise give back the data as resolved Promise
+        } 
         return data;
-      });
+      })
+      .catch(error => store.setError(error));
   }
 
   function getItems() {
