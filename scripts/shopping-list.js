@@ -49,8 +49,6 @@ const shoppingList = (function() {
   }
   
   function render() {
-    renderError();
-
     let items = [ ...store.items ];
 
     if (store.hideCheckedItems) {
@@ -76,7 +74,7 @@ const shoppingList = (function() {
           render();
         })
         .catch(err => {
-          store.setError(err.message);
+          store.setError(err);
           renderError();
         });
     });
@@ -98,7 +96,7 @@ const shoppingList = (function() {
             });
         })
         .catch(err => {
-          store.setError(err.message);
+          store.setError(err);
           renderError();
         });
     });
@@ -113,7 +111,7 @@ const shoppingList = (function() {
           render();
         })
         .catch(err => {
-          store.setError(err.message);
+          store.setError(err);
           renderError();
         });
     });
@@ -131,7 +129,7 @@ const shoppingList = (function() {
           render();
         })
         .catch(err => {
-          store.setError(err.message);
+          store.setError(err);
           renderError();
         });
     });
@@ -164,7 +162,7 @@ const shoppingList = (function() {
     $('.js-display-error').on('click', '#close-error', () => {
       store.setError(null);
       renderError();
-    })
+    });
   }
   
   function bindEventListeners() {
